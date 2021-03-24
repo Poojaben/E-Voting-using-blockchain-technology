@@ -36,14 +36,48 @@ app.get("/", function (req, res) {
 });
 
 
-app.post('/user/add', [ 
+app.post('/', [ 
     check('email', 'Email length should be 10 to 30 characters') 
                     .isEmail().isLength({ min: 10, max: 30 })
      ], async function(req,res){
       console.log(req.body);
+  	const matriculationnumber=req.body.matriculationnumber;
+          
+     try{
+        //const endKey = ["George"];
+        const viewUrl = "/_design/matriculation/_view/number";
+         
+        const queryOptions = {
+            key:matriculationnumber,
+            incude_docs:true
+        };
+        var {data, headers, status} = await couch.get("authorized_matriculation", viewUrl, queryOptions)
+        if(!data || (data && !data.rows) || ( data && data.rows && data.rows.length < 1)){
+          return res.render('index',{err_msg:"Please Enter Valid Matriculation Number"});
+        }
+      } catch(error){
+        console.log(error);
+        return res.render('index',{err_msg: error.message});
+      }
+
+      try{
+        const viewUrl = "/_design/all_users/_view/all";
+         
+        const queryOptions = {
+            key:matriculationnumber,
+            incude_docs:true
+        };
+        var {data, headers, status} = await couch.get("users", viewUrl, queryOptions)
+        if(data && data.rows && data.rows.length > 0){
+          return res.render('index',{err_msg:"The Matriculation number already exist"});
+        }
+      } catch(error){
+        console.log(error);
+        return res.render('index',{err_msg: error.message});
+      }
+      
   	const firstname=req.body.firstname;
   	const lastname=req.body.lastname;
-  	const matriculationnumber=req.body.matriculationnumber;
   	const course=req.body.course;
   	const semester=req.body.semester;
   	const email=req.body.email;
@@ -160,27 +194,29 @@ app.post('/user/add', [
         } finally {
            // Disconnect from the gateway when the application is closing
            // This will close all connections to the network
-           gateway.disconnect();
+            gateway.disconnect();
             couch.uniqid().then(function(ids){
-        const id = ids[0];
+              const id = ids[0];
 
-        couch.insert('users', {
-           _id: id,
-           firstname: firstname,
-           lastname: lastname,
-           matriculationnumber: matriculationnumber,
-           course: course,
-           semester: semester,
-           email: email,
-           password: password,
-         }).then(
-              function(data, headers, status){
-                res.redirect('/');
-           },
-           function(err){
-              res.send(err);
-              });
-          });
+              couch.insert('users', {
+                id: id,
+                firstname: firstname,
+                lastname: lastname,
+                matriculationnumber: matriculationnumber,
+                course: course,
+                semester: semester,
+                email: email,
+                password: password,
+              })
+              .then(
+                  function(data, headers, status){
+                    res.redirect('/');
+               },
+               function(err){
+                  res.send(err);
+                  }
+              );
+            });
         }
      } catch (error) {
         console.error(`******** FAILED to run the application: ${error}`)
@@ -217,17 +253,17 @@ app.get("/login", (req,res) =>{
 app.post("/login", Auth, async(req,res) =>{
    try{
       console.log("login")
-      const email = req.body.email;
+      const matriculationnumber = req.body.matriculationnumber;
       const password = req.body.password;
+      console.log("matriculationnumber", matriculationnumber)
+      console.log("password", password)
 
       const dbName = "users";
-            
-      const key = email;
       //const endKey = ["George"];
       const viewUrl = "/_design/all_users/_view/all";
        
       const queryOptions = {
-          key,
+          key:matriculationnumber,
           incude_docs:true
       };
        console.log("upper");
@@ -237,37 +273,56 @@ app.post("/login", Auth, async(req,res) =>{
           console.log("data", data)
           console.log("dataheaders", headers)
           console.log("status", status)
+          if (data.rows && data.rows.length>0){ 
+               const dbpassword= data["rows"][0].value
+              if(dbpassword == password){
+                const token = jwtAuth.sign({ sub: data.rows }, config.secret, { expiresIn: '7d' });
+                     return res.status(200).send({token, message:"logged in successfully"})
+               }else{ 
+                  return res.status(400).send({ error:"Invalid login details1"})
+               }
+          }else {
+              return res.status(400).send({ error:"Invalid login details2"})
+          }
         } catch(error){
           console.log(error);
+          return res.status(500).send({ error:error.message})
         }
-      if (data.rows && data.rows.length>0){ 
-             const dbpassword= data["rows"][0].value
-             console.log("dbpassword", dbpassword)
-             console.log("dbpasswordpassword", password)
-            if(dbpassword == password){
-              console.log("if");
-              const token = jwtAuth.sign({ sub: data.rows }, config.secret, { expiresIn: '7d' });
-                   res.status(200).send({token, message:"logged in successfully"})
-             }else{ 
-              console.log("else");
-                res.status(400).send({ error:"Invalid login details1"})
-             }
-         }else {
-              console.log("main else");
-              res.status(400).send({ error:"Invalid login details2"})
-         }
-      console.log("outer");
-     // const useremail=await couch.get.findone({email:email});
-
-      //if (useremail.password == password){
-       //  res.status(201).render("index");
-     // }else{
-        // res.send("Invalid details");
-    //  }
       
    } catch(error){
       console.log("error", error)
-      res.status(400).send("Invalid login details3")
+      return res.status(500).send({ error:error.message})
+   }
+});
+
+app.get("/add/matriculation", (req,res) =>{
+  console.log("all matriculation called");
+   res.render("add-matriculation");
+});
+
+// { }
+app.post("/matriculation", async(req,res) =>{
+   try{
+      console.log("add matriculation", req.body)
+      const matriculation_number = req.body.matriculationnumber;
+
+      const dbName = "authorized_matriculation";
+      couch.uniqid().then(function(ids){
+        const id = ids[0];
+        couch.insert(dbName, {
+           _id: id,
+            matriculationNumbers: matriculation_number
+          }).then(
+              function(data, headers, status){
+                res.redirect('/add/matriculation');
+              },
+              function(err){
+                res.send(err);
+          });
+      });
+   } catch(error){
+      console.log("error", error)
+      res.status(400).send(error.message)
    }
 });
 

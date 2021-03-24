@@ -58,7 +58,14 @@ hr {
 </style>  
 </head>  
 <body>  
-<form name="registration_form" id="registration_form" method="post" action="/user/add">  
+<% if(locals.err_msg) { %>
+    <script>
+      var msg = "<%= err_msg %>";
+      alert(msg);
+    </script>
+<% } %>
+
+<form name="registration_form" id="registration_form" method="post" action="/">  
   <div class="container">  
   <center>  <h1> Voter Registration Form</h1> </center>  
   <hr>
@@ -72,7 +79,7 @@ hr {
   </div>  
   <div>
 	<label>Matriculation Number:</label>  
-	<input type="text" name="matriculationnumber" placeholder="Add Matriculation number" size="10" required/>   
+	<input type="number" name="matriculationnumber" placeholder="Add Matriculation number" size="10" required/>   
   </div>  
 	<div>  
 		<label>Course:</label>   

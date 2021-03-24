@@ -8,7 +8,7 @@
   crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
-<script type="text/javascript" src="/public/js/validator/login.js"></script>
+<script type="text/javascript" src="/public/js/validator/matriculation.js"></script>
 <style>  
 body{  
   font-family: Calibri, Helvetica, sans-serif;  
@@ -20,7 +20,7 @@ body{
   background-color: lightblue;  
 }  
   
-input[type=text], input[type=number], input[type=password], textarea {  
+input[type=number], input[type=text] {  
   width: 100%;  
   padding: 15px;  
   margin: 5px 0;  
@@ -58,34 +58,18 @@ hr {
 </style>  
 </head>  
 <body>  
-<form name="login_form" action="login" id="login_form" method="post">  
-  <div class="container">  
-  <center>  <h1> Voter Login</h1> </center>  
-  <hr>
-  <div>
-    
-      <!-- <label for="email"><b>Email</b></label>  
-      <input type="email" placeholder="Enter Email" name="email" required > -->  
-      <label for="matriculationnumber">Matriculation Number:</label>  
-      <input type="number" name="matriculationnumber" placeholder="Add Matriculation number" required/>   
-  </div>
-
-  <div>
-    
-    <label for="password"><b>Password</b></label>  
-    <input type="password" id="password" name="password" placeholder="Enter Password" >  
-  </div>  
-   
-  <div>
-    
-    <input type="submit" class="registerbtn" value="Login" />    
-  </div>
-  
-  <div class="sign-up" >
-                Not a member?
-                <a href="#">Register now</a>
-            </div>
-  
+<form name="add_matriculation_form" action="/matriculation" id="add_matriculation_form" method="post">  
+    <div class="container">  
+    <center>  <h1> Add Matriculation Number</h1> </center>  
+    <hr>
+    <div>
+      
+       <label for="matriculationnumber"><b>Matriculation Number</b></label>  
+       <input type="number" placeholder="Enter Matriculation Number" name="matriculationnumber" >  
+    </div>
+    <div>
+      <input type="submit" class="registerbtn" value="Submit" />    
+    </div>
 </form>  
 </body>  
 </html> 
