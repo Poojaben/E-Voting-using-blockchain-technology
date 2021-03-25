@@ -1,11 +1,11 @@
-const { Auth } = require ('./middleware/auth.js')
+const { isAuth,  } = require ('./middleware/auth.js')
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const NodeCouchDb = require('node-couchdb');
 const config = require('./config.json');
-const jwt = require('./helpers/jwt');
 const jwtAuth = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 const { check, validationResult } 
     = require('express-validator'); 
   
@@ -31,7 +31,7 @@ app.use("/public", express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", function (req, res) { 
+app.get("/", blockIfLoggedIn, function (req, res) { 
     res.render("index"); 
 });
 
@@ -42,8 +42,16 @@ app.post('/', [
      ], async function(req,res){
       console.log(req.body);
   	const matriculationnumber=req.body.matriculationnumber;
-          
      try{
+        // validationResult function checks whether 
+        // any occurs or not and return an object 
+        const errors = validationResult(req); 
+      
+        // If some error occurs, then this 
+        // block of code will run 
+        if (!errors.isEmpty()) { 
+            return res.json(errors) 
+        }
         //const endKey = ["George"];
         const viewUrl = "/_design/matriculation/_view/number";
          
@@ -206,15 +214,16 @@ app.post('/', [
                 course: course,
                 semester: semester,
                 email: email,
-                password: password,
+                password: bcrypt.hashSync(password, 10),
+                is_admin: false
               })
               .then(
                   function(data, headers, status){
-                    res.redirect('/');
+                    return res.redirect('/login');
                },
                function(err){
-                  res.send(err);
-                  }
+                  return res.send(err);
+                }
               );
             });
         }
@@ -225,38 +234,18 @@ app.post('/', [
                           error
                                  }
      }
-
-     // validationResult function checks whether 
-      // any occurs or not and return an object 
-      const errors = validationResult(req); 
-    
-      // If some error occurs, then this 
-      // block of code will run 
-      if (!errors.isEmpty()) { 
-          res.json(errors) 
-      } 
-    
-      // If no error occurs, then this 
-      // block of code will run 
-      else { 
-          res.send("Successfully validated") 
-      } 
-
 });
 
-app.get("/login", (req,res) =>{
-  console.log("login called");
+app.get("/login", blockIfLoggedIn,  (req,res) =>{
    res.render("login");
 });
 
 // { }
-app.post("/login", Auth, async(req,res) =>{
+app.post("/login", async(req,res) =>{
    try{
-      console.log("login")
+
       const matriculationnumber = req.body.matriculationnumber;
       const password = req.body.password;
-      console.log("matriculationnumber", matriculationnumber)
-      console.log("password", password)
 
       const dbName = "users";
       //const endKey = ["George"];
@@ -266,18 +255,16 @@ app.post("/login", Auth, async(req,res) =>{
           key:matriculationnumber,
           incude_docs:true
       };
-       console.log("upper");
        try{
 
-          var {data, headers, status} = await couch.get(dbName, viewUrl, queryOptions)
-          console.log("data", data)
-          console.log("dataheaders", headers)
-          console.log("status", status)
+          var {data, headers, status} = await couch.get(dbName, viewUrl, queryOptions);
           if (data.rows && data.rows.length>0){ 
                const dbpassword= data["rows"][0].value
-              if(dbpassword == password){
+              if(bcrypt.compareSync(password, dbpassword)){
                 const token = jwtAuth.sign({ sub: data.rows }, config.secret, { expiresIn: '7d' });
-                     return res.status(200).send({token, message:"logged in successfully"})
+                res.cookie('token', token);
+                return res.redirect('/dashboard');
+                     // return res.status(200).send({token, message:"logged in successfully"})
                }else{ 
                   return res.status(400).send({ error:"Invalid login details1"})
                }
@@ -295,8 +282,16 @@ app.post("/login", Auth, async(req,res) =>{
    }
 });
 
+app.get("/logout", isAuth, (req,res) =>{
+  res.clearCookie("token");
+   res.redirect("/login");
+});
+
+app.get("/dashboard", isAuth, (req,res) =>{
+   res.render("dashboard");
+});
+
 app.get("/add/matriculation", (req,res) =>{
-  console.log("all matriculation called");
    res.render("add-matriculation");
 });
 
