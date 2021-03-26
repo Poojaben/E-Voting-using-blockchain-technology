@@ -1,4 +1,4 @@
-const { isAuth,blockIfLoggedIn  } = require ('./middleware/auth.js')
+const { isAuth,blockIfLoggedIn, isAdminRoute  } = require ('./middleware/auth.js')
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -31,18 +31,19 @@ app.use("/public", express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/users/add", isAuth, function (req, res) { 
+app.get("/users/add", isAuth,isAdminRoute, function (req, res) { 
     res.render("index"); 
 });
 
 
-app.post('/users/add', isAuth, [ 
+app.post('/users/add', isAuth,isAdminRoute, [ 
     check('email', 'Email length should be 10 to 30 characters') 
                     .isEmail().isLength({ min: 10, max: 30 })
      ], async function(req,res){
       console.log(req.body);
   	const matriculationnumber=req.body.matriculationnumber;
-     try{
+
+      try{
         // validationResult function checks whether 
         // any occurs or not and return an object 
         const errors = validationResult(req); 
@@ -52,23 +53,7 @@ app.post('/users/add', isAuth, [
         if (!errors.isEmpty()) { 
             return res.json(errors) 
         }
-        //const endKey = ["George"];
-        const viewUrl = "/_design/matriculation/_view/number";
-         
-        const queryOptions = {
-            key:matriculationnumber,
-            incude_docs:true
-        };
-        var {data, headers, status} = await couch.get("authorized_matriculation", viewUrl, queryOptions)
-        if(!data || (data && !data.rows) || ( data && data.rows && data.rows.length < 1)){
-          return res.render('index',{err_msg:"Please Enter Valid Matriculation Number"});
-        }
-      } catch(error){
-        console.log(error);
-        return res.render('index',{err_msg: error.message});
-      }
 
-      try{
         const viewUrl = "/_design/all_users/_view/all";
          
         const queryOptions = {
@@ -214,25 +199,23 @@ app.post('/users/add', isAuth, [
                 course: course,
                 semester: semester,
                 email: email,
-                password: bcrypt.hashSync(password, 10),
+                password: bcrypt.hashSync(`${firstname}-${matriculationnumber}`, 10),
                 is_admin: false
               })
               .then(
                   function(data, headers, status){
-                    return res.redirect('/');
+                    return res.render('index',{err_msg:"User added successfully"});
                },
                function(err){
-                  return res.send(err);
+                console.log(err);
+                  return res.render('index',{err_msg:err.message});
                 }
               );
             });
         }
      } catch (error) {
         console.error(`******** FAILED to run the application: ${error}`)
-        return{
-                          status:500,
-                          error
-                                 }
+        return res.render('index',{err_msg:err.message});
      }
 });
 
@@ -288,7 +271,8 @@ app.get("/logout", isAuth, (req,res) =>{
 });
 
 app.get("/dashboard", isAuth, (req,res) =>{
-   res.render("dashboard");
+  console.log("res.locals.tokenData", res.locals.tokenData)
+   res.render("dashboard", {data: res.locals.tokenData});
 });
 
 app.get("/add/matriculation", (req,res) =>{

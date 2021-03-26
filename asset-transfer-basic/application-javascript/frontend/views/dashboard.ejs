@@ -52,7 +52,12 @@
       <form name="login_form" action="login" id="login_form" method="post">
          <div class="container">
          <center>
-            <h1> Welcome to dashboard</h1>
+            <h1>Hello <%= data.firstname %></h1>
+            <% if(data.is_admin) { %>
+               <h3>You are admin</h3>
+            <% } else { %>
+               <h3>You are not admin</h3>
+            <% } %>
          </center>
       </form>
    </body>
