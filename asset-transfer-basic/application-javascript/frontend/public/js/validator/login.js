@@ -1,7 +1,7 @@
 $(function () {
-    $.validator.addMethod("email", function(value, element, param) {
-        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
-    },'Please insert valid email address');
+    $.validator.addMethod("matriculation", function(value, element, param) {
+        return value.startsWith(127);
+    },'The matriculation number must be start with "127"');
 
     $("form[name='login_form']").validate({
         errorElement: "span",
@@ -9,9 +9,10 @@ $(function () {
 
         rules: {
             
-            email: {
+            matriculationnumber: {
                 required: true,
-                email:true
+                minlength:7,
+                number:true
             },
             password: {
                 required: true,

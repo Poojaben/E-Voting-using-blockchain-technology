@@ -11,12 +11,19 @@ const FabricCAServices = require('fabric-ca-client');
 const path = require('path');
 const { buildCAClient, registerAndEnrollUser, enrollAdmin } = require('../../test-application/javascript/CAUtil.js');
 const { buildCCPOrg1, buildWallet } = require('../../test-application/javascript/AppUtil.js');
+const NodeCouchDb = require('node-couchdb');
 
 const channelName = 'mychannel';
 const chaincodeName = 'basic';
 const mspOrg1 = 'Org1MSP';
 const walletPath = path.join(__dirname, 'wallet');
 const org1UserId = 'appUser';
+const couch = new NodeCouchDb({
+	auth:{
+		user:'admin',
+		password:'adminpw'
+	}
+});
 
 function prettyJSONString(inputString) {
 	return JSON.stringify(JSON.parse(inputString), null, 2);
@@ -175,6 +182,29 @@ async function main() {
 			// Disconnect from the gateway when the application is closing
 			// This will close all connections to the network
 			gateway.disconnect();
+			couch.uniqid().then(function(ids){
+              const id = ids[0];
+
+              couch.insert('users', {
+                id: id,
+                firstname: "admin",
+                lastname: "admin",
+                matriculationnumber: "1270000",
+                course: "",
+                semester: "",
+                email: "admin@gmail.com",
+                password: bcrypt.hashSync("admin@123", 10),
+                is_admin: true
+              })
+              .then(
+                  function(data, headers, status){
+                    return res.redirect('/');
+               },
+               function(err){
+                  return res.send(err);
+                }
+              );
+            });
 		}
 	} catch (error) {
 		console.error(`******** FAILED to run the application: ${error}`);

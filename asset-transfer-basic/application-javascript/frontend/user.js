@@ -1,4 +1,4 @@
-const { isAuth,  } = require ('./middleware/auth.js')
+const { isAuth,blockIfLoggedIn  } = require ('./middleware/auth.js')
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -31,12 +31,12 @@ app.use("/public", express.static('public'))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-app.get("/", blockIfLoggedIn, function (req, res) { 
+app.get("/users/add", isAuth, function (req, res) { 
     res.render("index"); 
 });
 
 
-app.post('/', [ 
+app.post('/users/add', isAuth, [ 
     check('email', 'Email length should be 10 to 30 characters') 
                     .isEmail().isLength({ min: 10, max: 30 })
      ], async function(req,res){
@@ -114,7 +114,7 @@ app.post('/', [
         const wallet = await buildWallet(Wallets, walletPath);
 
         // in a real application this would be done on an administrative flow, and only once
-       await enrollAdmin(caClient, wallet, mspOrg1);
+       // await enrollAdmin(caClient, wallet, mspOrg1);
 
         // in a real application this would be done only when a new user was required to be added
         // and would be part of an administrative flow
@@ -219,7 +219,7 @@ app.post('/', [
               })
               .then(
                   function(data, headers, status){
-                    return res.redirect('/login');
+                    return res.redirect('/');
                },
                function(err){
                   return res.send(err);
@@ -236,7 +236,7 @@ app.post('/', [
      }
 });
 
-app.get("/login", blockIfLoggedIn,  (req,res) =>{
+app.get("/", blockIfLoggedIn,  (req,res) =>{
    res.render("login");
 });
 
@@ -266,10 +266,10 @@ app.post("/login", async(req,res) =>{
                 return res.redirect('/dashboard');
                      // return res.status(200).send({token, message:"logged in successfully"})
                }else{ 
-                  return res.status(400).send({ error:"Invalid login details1"})
+                  return res.status(400).send({ error:"Invalid login details"})
                }
           }else {
-              return res.status(400).send({ error:"Invalid login details2"})
+              return res.status(400).send({ error:"Invalid login details"})
           }
         } catch(error){
           console.log(error);
