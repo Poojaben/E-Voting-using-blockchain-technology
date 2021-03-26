@@ -18,29 +18,12 @@ exports.isAuth = async (req, res, next)=> {
 			jwtAuth.verify(ck[1].trim(), config.secret, async function (err, decode) {
 				if (decode) {
 					console.log("decode", decode);
-					couch.get("users", decode.sub[0].id).then(({data, headers, status}) => {
-						res.locals.tokenData = data;
-						next();
-					}, err => {
-						console.log("err", err)
-						return res.redirect("/");
-					    // either request error occured
-					    // ...or err.code=EDOCMISSING if document is missing
-					    // ...or err.code=EUNKNOWN if statusCode is unexpected
-					});
+					res.locals.tokenData = decode.sub;
+					next();
 				} else{
 					return res.redirect("/");
 				}
 			});
-
-			// let {err, decode} = await jwtAuth.verify(ck[1].trim(), config.secret);
-			// 	if (decode) {
-			// 		console.log(decode);
-			// 		res.locals.tokenData = decode.sub;
-			// 		return next();
-			// 	} else{
-			// 		return res.redirect("/");
-			// 	}
 		}else{	
 			return res.redirect("/");
 		}

@@ -232,7 +232,7 @@ app.post("/", async(req,res) =>{
 
       const dbName = "users";
       //const endKey = ["George"];
-      const viewUrl = "/_design/all_users/_view/all";
+      const viewUrl = "/_design/users/_view/user";
        
       const queryOptions = {
           key:matriculationnumber,
@@ -241,10 +241,12 @@ app.post("/", async(req,res) =>{
        try{
 
           var {data, headers, status} = await couch.get(dbName, viewUrl, queryOptions);
+          console.log("couch dta", data)
           if (data.rows && data.rows.length>0){ 
-               const dbpassword= data["rows"][0].value
+            console.log("data", data["rows"])
+               const dbpassword= data["rows"][0].value.password
               if(bcrypt.compareSync(password, dbpassword)){
-                const token = jwtAuth.sign({ sub: data.rows }, config.secret, { expiresIn: '7d' });
+                const token = jwtAuth.sign({ sub: data.rows[0].value }, config.secret, { expiresIn: '7d' });
                 res.cookie('token', token);
                 return res.redirect('/dashboard');
                      // return res.status(200).send({token, message:"logged in successfully"})
