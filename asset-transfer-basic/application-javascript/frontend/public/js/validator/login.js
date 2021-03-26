@@ -12,7 +12,8 @@ $(function () {
             matriculationnumber: {
                 required: true,
                 minlength:7,
-                number:true
+                maxlength:7,
+                // min:true
             },
             password: {
                 required: true,

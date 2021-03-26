@@ -33,6 +33,7 @@
     border: none;
     background: #f1f1f1;
     border-radius: 10px; 
+    border: 1px solid #1C276F;
   }  
   input[type=text]:focus, input[type=password]:focus {  
     background-color: orange;  
@@ -64,7 +65,7 @@
   </style>  
   </head>  
   <body>  
-  <form name="login_form" action="login" id="login_form" method="post">  
+  <form name="login_form" action="/" id="login_form" method="post">  
     <div class="container">  
       <div class="main">
         <center>
@@ -87,6 +88,12 @@
       </div>
     </div>
     
-  </form>  
+  </form> 
+  <% if(locals.err_msg) { %>
+    <script>
+      var msg = "<%= err_msg %>";
+      alert(msg);
+    </script>
+  <% } %> 
   </body>  
   </html> 

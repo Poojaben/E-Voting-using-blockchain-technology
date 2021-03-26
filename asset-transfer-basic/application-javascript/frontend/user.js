@@ -241,7 +241,7 @@ app.get("/", blockIfLoggedIn,  (req,res) =>{
 });
 
 // { }
-app.post("/login", async(req,res) =>{
+app.post("/", async(req,res) =>{
    try{
 
       const matriculationnumber = req.body.matriculationnumber;
@@ -266,25 +266,25 @@ app.post("/login", async(req,res) =>{
                 return res.redirect('/dashboard');
                      // return res.status(200).send({token, message:"logged in successfully"})
                }else{ 
-                  return res.status(400).send({ error:"Invalid login details"})
+                return res.render('login',{err_msg: "Invalid login details"})
                }
           }else {
-              return res.status(400).send({ error:"Invalid login details"})
+              return res.render('login',{err_msg: "Invalid login details"})
           }
         } catch(error){
           console.log(error);
-          return res.status(500).send({ error:error.message})
+          return res.render('login',{err_msg: error.message})
         }
       
    } catch(error){
       console.log("error", error)
-      return res.status(500).send({ error:error.message})
+      return res.render('login',{err_msg: error.message})
    }
 });
 
 app.get("/logout", isAuth, (req,res) =>{
   res.clearCookie("token");
-   res.redirect("/login");
+   res.redirect("/");
 });
 
 app.get("/dashboard", isAuth, (req,res) =>{

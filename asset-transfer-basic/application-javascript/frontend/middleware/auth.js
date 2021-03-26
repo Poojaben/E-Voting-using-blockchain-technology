@@ -12,14 +12,14 @@ exports.isAuth = (req, res, next)=> {
 					res.locals.tokenData = decode.sub;
 					next();
 				} else{
-					return res.redirect("/login");
+					return res.redirect("/");
 				}
 			});
 		}else{	
-			return res.redirect("/login");
+			return res.redirect("/");
 		}
 	} else{
-		return res.redirect("/login");
+		return res.redirect("/");
 	}
 }
 exports.blockIfLoggedIn = (req, res, next)=> {
