@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <%- include('./partials/header');%>
+    </head>
+    <body onload="essentials(),checkDate()">
+  <header id="header"> </header>
+  <%- include('./partials/sideNav'); %><br/>
+<%- include('./partials/nav'); %>
+ 
+
+<div id='result' class="tab-content">
+
+    
+    </div>
+
+
+    <footer id="footer"></footer>
+      <script> 
+        
+        var i= document.getElementById("results");
+        
+        i.className +=" active";
+
+        var j=document.getElementById("election_tab");
+      
+      j.className +=" active";
+        
+        </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+function checkStudent(){
+   bool flag=false;
+ var x1=document.forms["addElection"]["user1"];
+     flag=false;
+<% elections.forEach(function(election){ %>
+
+    <% if(election.value.type=='student'){%> 
+        
+        
+       
+       var y="<%= election.value.fname %>";
+       
+
+              if(y !== x1.value){
+              return false;
+              }
+              else{
+                  flag=true;
+                  alert("match");
+              }
+           
+          
+              
+
+        
+        <%  });
+  }%>
+  if (flag==true){
+      return true;
+  }
+}

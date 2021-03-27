@@ -1,0 +1,10 @@
+hello
+<script>
+const child = execFile('../../../queryapp.js',[--version],(error,stdout,stderr)=>{
+    
+    if(error){
+        throw error;
+    }
+    console.log(stdout);
+});
+</script>

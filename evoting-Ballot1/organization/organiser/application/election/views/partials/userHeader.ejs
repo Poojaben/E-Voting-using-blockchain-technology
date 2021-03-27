@@ -1,0 +1,220 @@
+<meta content-type="application/javascript"    charset="UTF-8" name="keywords" content="HTML,CSS,Javascript">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Election Page</title>
+<!-- CSS load-->
+<link rel="stylesheet" type="text/css" href="./../../blockChainStyle.css">
+<style>
+   
+ 
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    
+}
+#header {
+    overflow: hidden;
+    background-color:midnightblue;
+    padding:20px;
+}
+
+#title
+{
+    color:white;
+    text-align:left;
+   font-size:20px;
+   text-decoration:none;
+
+}
+#hlogin{
+  position:absolute;
+    text-align:left;
+    color:white;
+   text-decoration:none;
+   left:95%;
+}
+h2 {
+    text-align: center;
+    font-size: 35px;
+}
+
+div.article {
+    margin: 10%;
+    border: 2px solid black;
+    width: 60%;
+    height: 80%;
+    line-height: 1.5;
+    margin-inline: auto;
+}
+
+form {
+    padding: 4%;
+    display: table;
+    margin: 0 auto;
+    font-size: 18px;
+}
+label{
+    padding-right:5px;
+}
+input[type=text], select {
+    width:100%;
+    padding:10px;
+    border:1px solid #ddd;
+    resize: vertical;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+input[type=date]{
+
+    display: block;
+    margin-top:10px;
+    margin-bottom: 10px;
+    padding:5px;
+}
+input[type=submit]:hover {
+    background-color: midnightblue;
+    cursor: pointer;
+    color: white;
+   
+    border-image: initial;
+    text-align: center;
+    padding: 3px 23px;
+    border-radius: 5px;
+}
+#delete form {
+    margin:0 0;
+}
+span#remindPasswd {
+    border: 1px solid black;
+    font-size:12px;
+    padding:5px;
+}
+p {
+    
+    text-align: inherit;
+    font-size: 13px;
+}
+span
+{
+    font-size: 17px;
+}
+#showall div p,.tab-content div p{
+
+    text-align: inherit;
+    font-size: 15px;
+    padding-left: 20px;
+}
+#showall b,.tab-content b{ 
+
+
+font-size: 17px;
+
+}
+#showall div b,.tab-content div b{
+
+
+font-size: 15px;
+
+}
+.moduletitle{
+padding-top:5px;
+font-weight:bolder;
+font-size: 20px;
+}
+
+.pagetitle{
+padding-top:5px;
+
+font-size: 15px;
+}
+.side_tabs {
+	overflow: hidden;
+	background-color: #0099ff8f;
+	border: 1px solid skyblue;
+}
+.side_tabs a {
+
+float:left;
+cursor: pointer;
+padding:12px 6px;
+transition: 0.2s;
+font-size: 17px;
+text-decoration: none;
+color:black;
+display:block;
+text-align: left;
+
+}
+.side_tabs a:hover,.side_tabs a.active {
+background-color: rgb(234, 230, 250);
+}
+
+
+.tabs{
+
+overflow:hidden;
+border:1px solid lightskyblue;
+background-color: lightsteelblue;
+
+}
+.tabs a{
+background-color:inherit;
+float:left;
+cursor: pointer;
+padding:14px 6px;
+transition: 0.2s;
+font-size: 17px;
+text-decoration: none;
+color:black
+}
+.tabs a:hover,.tabs a.active {
+background-color: lavender;
+}
+.endOfanEntry{
+    text-align:center;
+}
+li{
+list-style-type: none;
+
+padding-left: 15px;
+padding-top: 15px;
+}
+#delete,div#result{
+    
+    padding :3%;
+    display: block;
+}
+#footer {
+    overflow: hidden;
+    background-color: midnightblue;
+    padding: 10px;
+    max-height:300px;
+    bottom:5px;
+    position: fixed;
+    bottom:0;
+    width:100%;
+}
+#footer p
+{
+color:antiquewhite
+}
+
+
+</style>
+<script >
+// JavaScript source code
+     
+function essentials() {
+    document.getElementById("header").innerHTML = "<span id=" + " title" + ">e-Voting</span>";
+
+    document.getElementById("footer").innerHTML =
+        " <p><b>  " + "Our lives begin to end the day we become silent about things that matter." + "</b > <br />"
+    + "&#8212;  Dr.Martin Luther King, Jr., civil rights leader and Nobel Peace Prize laureate </p>";
+}    
+
+function toCapitalCase(Str){
+Str=Str.toLowerCase();
+Str=Str.charAt(0).toUpperCase()+Str.slice(1);
+return Str;
+
+}
+</script>

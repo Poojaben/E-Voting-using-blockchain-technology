@@ -1,0 +1,49 @@
+<head>
+
+    <%- include('./partials/header');%>
+</head>
+<body onload="essentials()">
+<header id="header"> </header>
+<%- include('./partials/nav'); %>
+
+
+<div id='delete' class="tab-content">
+    <% elections.forEach(function(election){ %>
+        <li><% if(election.value.type=='election'){ %>
+            <p><b>Election title: </b><span><%= election.value.election_name %></span></p>
+            <p><b>Date:</b><span><%= election.value.election_date %></span></p>
+            <div><h4>Candidate1</h4>
+            <p><b>name:</b><%= election.value.candidate_1.user_name%></p>
+            <p><b>party:</b><%= election.value.candidate_1.party %></p>
+            <p><b>branch:</b><%= election.value.candidate_1.branch %></p>
+            </div>
+            <div><h4>Candidate2</h4>
+                <p><b>name:</b><%= election.value.candidate_2.user_name%></p>
+                <p><b>party:</b><%= election.value.candidate_2.party %></p>
+                <p><b>branch:</b><%= election.value.candidate_2.branch %></p>
+                </div>
+                <div><h4>Candidate3</h4>
+                    <p><b>name:</b><%= election.value.candidate_3.user_name%></p>
+                    <p><b>party:</b><%= election.value.candidate_3.party %></p>
+                    <p><b>branch:</b><%= election.value.candidate_3.branch %></p>
+                </div>
+    <form method="post" action="/election/delete/<%= election.key %>">
+    <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+    <input type='submit' value='Delete'>
+    </form>
+    </li>
+    <% }});%>
+    </div>
+  
+    <br/>
+    
+    
+    
+    
+    <footer id="footer"></footer>
+    <script> 
+        var i= document.getElementById("del");
+        
+        i.className +=" active";
+         </script>
+</body>

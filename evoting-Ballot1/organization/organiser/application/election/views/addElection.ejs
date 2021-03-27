@@ -1,0 +1,63 @@
+<head>
+
+    <%- include('./partials/header');%>
+
+</head>
+<body onload="essentials(),branchDropDown()">
+<header id="header"> </header>
+<%- include('./partials/sideNav'); %><br/>
+<%- include('./partials/nav'); %>
+
+<div id='add' class="tab-content">
+
+    <h3> Add Election </h3>
+    
+    <form name="addElection" method="post" action="/election/add" onsubmit="return validateAddElection(this)">
+    <label>Election Title:*</label>
+    <input type="text" name="name" placeholder="Add Election Name"  autofocus required>
+    <label>Date:*</label>
+    <input type="date" name="date" value="<%= new Date().toLocaleDateString('en-GB')    %>"  min="<%= new Date().toLocaleDateString('en-GB')    %>" required >
+    <label>First candidate:*</label><input type="text" name="user1" placeholder="Candidate Name" id="user1" required>
+    <label>Branch:*</label>
+    <select class="branchname" id="branchname1" name="branchname1" onfocus="partyDropDown(this,0)" required>
+        <option value="" selected="selected">select branch name</option>
+    </select>
+    Party*:<select class="partyname" id="partyname1" name="partyname1" required>
+        <option value="" selected="selected">select branch first</option>
+    </select>
+
+    <label>Second candidate:*</label><input type="text" name="user2" placeholder="Candidate Name" id="user2" required>
+    Branch:*<select class="branchname" id="branchname2" name="branchname2" onfocus="partyDropDown(this,1)" required>
+        <option value="" selected="selected">select branch name</option>
+    </select>
+    Party:*<select class="partyname" id="partyname2" name="partyname2" required>
+        <option value="" selected="selected">select branch first</option>
+    </select>
+    
+    <label>Third candidate:*</label><input type="text" name="user3" placeholder="Candidate Name" id="user3" required>
+    Branch:*<select class="branchname" id="branchname3" name="branchname3" onfocus="partyDropDown(this,2)" required>
+        <option value="" selected="selected">select branch name</option>
+    </select>
+    Party:*<select class="partyname" id="partyname3" name="partyname3" required>
+        <option value="" selected="selected">select branch first</option>
+    </select>
+    <input type="hidden"  id="type" name="type" value='election'>
+    <input type="submit" value="Submit">
+    </form>
+  
+    </div>
+    <footer id="footer"></footer>
+    <br>
+    <script> 
+       var i= document.getElementById("add");
+      
+       i.className +=" active";
+       var j=document.getElementById("election_tab");
+      
+      j.className +=" active";
+
+
+
+
+        </script>
+</body>

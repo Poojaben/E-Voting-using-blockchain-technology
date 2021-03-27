@@ -1,0 +1,66 @@
+
+<head>
+
+    <%- include('./partials/header');%>
+</head>
+<body onload="essentials(),branchDropDown()">
+<header id="header"> </header>
+<%- include('./partials/nav'); %>
+
+    <% elections.forEach(function(election){ %>
+        <% if(election.value.type=='election'){ %>
+    <div id='update' class='tab-content'>
+    <li>
+        <h3> update Election </h3>
+        
+        <form name ="addElection" method="post" action="/election/update/<%= election.key %>" onsubmit="return validateAddElection(this)">
+      
+            <p>Election Name:*<input type="text" name="name" value='<%= election.value.election_name %>' autofocus required></p>
+        <p>Date:*<input type="date" name="date" value='<%= election.value.election_date %>' required></p>
+        <p>First candidate:*<input type="text" name="user1" value='<%= election.value.candidate_1.user_name%>'required onchange="checkStudent()"></p>
+        <p>Branch:*<select class="branchname" id="branchname1" name="branchname1" onfocus="partyDropDown(this,0);" required >
+            <option value='<%= election.value.candidate_1.branch%>' selected="selected"><%= election.value.candidate_1.branch%></option>
+        </select>
+        </p>
+        <p>Party:*<select class="partyname" id="partyname1" name="partyname1" required>
+            <option value='<%= election.value.candidate_1.party%>' selected="selected"><%= election.value.candidate_1.party%></option>
+        </select></p>
+        <p>Second candidate:*<input type="text" name="user2" value='<%= election.value.candidate_2.user_name%>'required></p>
+        <p>Branch:*<select class="branchname" id="branchname2" name="branchname2" onfocus="partyDropDown(this,1);" required>
+            <option value='<%= election.value.candidate_2.branch%>' selected="selected"><%= election.value.candidate_2.branch%></option>
+        </select></p>
+        
+        <p>Party:*<select class="partyname" id="partyname2" name="partyname2" required>
+            <option value='<%= election.value.candidate_2.party%>' selected="selected"><%= election.value.candidate_2.party%></option>
+        </select></p>
+        <p>Third candidate:*<input type="text" name="user3" value='<%= election.value.candidate_3.user_name%>' required></p>
+        <p>Branch:*<select class="branchname" id="branchname3" name="branchname3" onfocus="partyDropDown(this,2);" required>
+            <option value='<%= election.value.candidate_3.branch%>' selected="selected"><%= election.value.candidate_3.branch%></option>
+        </select>
+    </p>
+        <p>Party:*<select class="partyname" id="partyname3" name="partyname3"  required>
+            <option value='<%= election.value.candidate_3.party%>' selected="selected"><%= election.value.candidate_3.party%></option>
+        </select></p>
+        <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+        <input type='hidden' value='<%= election.value.type%>' name='type'>
+        <p><input type="submit" value="Update"></p>
+        </form>
+        </li>
+        <% } %>
+    <% });%>
+    </div>
+    
+    
+   
+    
+    <footer id="footer"></footer>
+    <script> 
+        var i= document.getElementById("update");
+        
+        i.className +=" active";
+        
+        
+        
+
+        </script>
+</body>
