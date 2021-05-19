@@ -1,0 +1,58 @@
+<head>
+   <%- include('./partials/header');%>
+   <style>
+      td, th{
+      border: 1px solid;
+      }
+   </style>
+</head>
+<body onload="essentials()">
+   <header id="header"> </header>
+   <div class="main">
+      <%- include('./partials/sideNav'); %>
+      <%- include('./partials/nav'); %>
+      <div id='delete' class="tab-content">
+         <table style="width:100%; text-align: center;">
+            <thead>
+               <tr>
+                  <th>Election title</th>
+                  <th>Date</th>
+                  <th>Candidate1</th>
+                  <th>Candidate2</th>
+                  <th>Candidate3</th>
+                  <th>Action</th>
+               </tr>
+            </thead>
+            <tbody>
+               <% elections.forEach(function(election){ %>
+               <% if(election.value.type=='election'){ %>
+               <tr>
+                  <td><%= election.value.election_name %></td>
+                  <td><%= election.value.election_date %></td>
+                  <td><%= election.value.candidate_1.user_name%></td>
+                  <td><%= election.value.candidate_2.user_name%></td>
+                  <td><%= election.value.candidate_3.user_name%></td>
+                  <td>
+                     <form method="post" action="/election/delete/<%= election.key %>">
+                        <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+                        <input type='submit' value='Delete'>
+                     </form>
+                  </td>
+               </tr>
+               <%}})%>
+            </tbody>
+         </table>
+      </div>
+      <br/>
+   </div>
+   <footer id="footer"></footer>
+   <script> 
+      var i= document.getElementById("del");
+      
+      i.className +=" active";
+      var j=document.getElementById("election_tab");
+      
+      j.className +=" active";
+       
+   </script>
+</body>

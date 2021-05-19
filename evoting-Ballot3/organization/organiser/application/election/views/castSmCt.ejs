@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <%- include('./partials/header');%>
+   </head>
+   <body onload="essentials()">
+      <header id="header"> </header>
+      <div class="main">
+         <p id="declare">You voted for: <%= query.sel%></p>
+         <p id="message" >Thanks for your vote, your vote has been submitted for Tallying.</p>
+         <% casting.casting(voter,query.id,query.bt,query.sel) %>
+         <a href="/welcome" id="back_home">Click here to go back to home page.</a>
+      </div>
+      <footer id="footer"></footer>
+   </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <%- include('./partials/header');%>
+      <style>
+         body{
+         margin: 0;
+         }
+         .dropbtn {
+         background-color: transparent;
+         color: white;
+         padding: 10px;
+         cursor: pointer;
+         border: 1px solid;
+         }
+         .dropbtn:hover, .dropbtn:focus {
+         background-color: #2980B9;
+         }
+         .dropdown-content {
+         display: none;
+         position: absolute;
+         background-color: #f1f1f1;
+         min-width: 160px;
+         overflow: auto;
+         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+         z-index: 1;
+         right: 20px
+         }
+         .dropdown-content a {
+         color: black;
+         padding: 12px 16px;
+         text-decoration: none;
+         display: block;
+         }
+         .dropdown a:hover {background-color: #ddd;}
+         .show {display: block;}
+      </style>
+   </head>
+   <body onload="SpecificEssentials()">
+      <header id="header" style="display: flex; justify-content: space-between; align-items: center;">
+         <span id="title">e-Voting</span> 
+         <div>
+            <button onclick="myFunction()" class="dropbtn">My Account</button>
+            <div id="myDropdown" class="dropdown-content">
+               <a href="/profile">My Profile</a>
+               <a href="/logout">Logout</a>
+            </div>
+         </div>
+      </header>
+      <div style="min-height: calc(100vh - 153px);">
+        <div id='showall' style="padding:10%;" class="tab-content">
+           <h3 style="text-align: center;">Today's List of Elections</h3>
+           <ul style="font-size: 20px;">
+              <% elections.forEach(function(election){ %>
+              <li style="list-style-type: disc;">
+                 <a href="/result?id=<%= election.id %>"><%= election.value.election_name %></a>
+              </li>
+              <%})%>
+           </ul>
+        </div>
+      </div>
+      <footer id="footer"></footer>
+      <script>
+         function SpecificEssentials() {
+           // document.getElementById("header").innerHTML = "<span id=" + " title" + ">e-Voting123</span>";
+         
+           document.getElementById("footer").innerHTML =
+               " <p><b>  " + "Our lives begin to end the day we become silent about things that matter." + "</b > <br />"
+           + "&#8212;  Dr.Martin Luther King, Jr., civil rights leader and Nobel Peace Prize laureate </p>";
+         }
+         
+         /* When the user clicks on the button, 
+         toggle between hiding and showing the dropdown content */
+         function myFunction() {
+         document.getElementById("myDropdown").classList.toggle("show");
+         }
+         
+         // Close the dropdown if the user clicks outside of it
+         window.onclick = function(event) {
+         if (!event.target.matches('.dropbtn')) {
+           var dropdowns = document.getElementsByClassName("dropdown-content");
+           var i;
+           for (i = 0; i < dropdowns.length; i++) {
+             var openDropdown = dropdowns[i];
+             if (openDropdown.classList.contains('show')) {
+               openDropdown.classList.remove('show');
+             }
+           }
+         }
+         }
+      </script>
+   </body>
+</html>

@@ -1,0 +1,45 @@
+<html>
+   <head>
+      <%- include('./partials/header');%>
+      <style>
+         td, th{
+         border: 1px solid;
+         }
+      </style>
+   </head>
+   <body onload="essentials()">
+      <header id="header"> </header>
+      <div class="main">
+        <%- include('./partials/verifierNav'); %>
+        <div id='audit_body' class="tab-content">
+           <table style="width:100%; text-align: center;">
+              <thead>
+                 <tr>
+                    <th>Election Number</th>
+                    <th>Ballot Number</th>
+                    <th>Current State</th>
+                 </tr>
+              </thead>
+              <tbody>
+                 <% trying.data.forEach(function(entry){%>
+                 <tr>
+                    <td><%= entry.Record.electionNumber %></td>
+                    <td><%= entry.Record.ballotNumber %></td>
+                    <td> <%= entry.Record.currentState%> </td>
+                 </tr>
+                 <%})%>
+              </tbody>
+           </table>
+           <br/><br/>
+           <a id="all_audit" href="/confirmAudit"> Audit All</a>
+           <br/>
+        </div>
+      </div>
+      <footer id="footer"></footer>
+      <script> 
+         var i= document.getElementById("audit");
+         
+         i.className +=" active";
+      </script>
+   </body>
+</html>

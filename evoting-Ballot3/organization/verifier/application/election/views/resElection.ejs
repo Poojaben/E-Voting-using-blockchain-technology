@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <%- include('./partials/header');%>
+   </head>
+   <body onload="essentials(),checkDate()">
+      <header id="header"> </header>
+      <div class="main">
+        <%- include('./partials/verifierNav'); %>
+        <div id='result' class="tab-content">
+           <p id="declare">Please click on link to below to see result of election:</p>
+           <ul>
+              <li id="result_list"></li>
+           </ul>
+        </div>
+      </div>
+      <footer id="footer"></footer>
+      <script> 
+         var i= document.getElementById("results");
+         
+         i.className +=" active";
+         
+         function checkDate(){ 
+             var d= new Date();
+             var date= new Date(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate());
+         
+             var mylist= document.getElementById('result_list');
+             var elections =<%-JSON.stringify(elections)%>
+             for (const election of elections){
+               var electionDate = new Date(election.value.election_date);
+               if( date.getTime() > electionDate.getTime()){
+                 var anchorTag = document.createElement('a');
+                    anchorTag.setAttribute('href',`/result?id=${election.id}&elN=${election.value.election_name}&c1=${election.value.candidate_1.user_name}&c2=${election.value.candidate_2.user_name}&c3=${election.value.candidate_3.user_name}`);
+                    anchorTag.setAttribute('id',election.id);
+                    anchorTag.setAttribute('name',election.value.election_name);
+                    anchorTag.innerText = election.value.election_name+"\n\n";
+                    mylist.appendChild(anchorTag);
+               }
+             }
+           }
+         
+      </script>
+   </body>
+</html>

@@ -1,0 +1,45 @@
+<html>
+   <head>
+      <%- include('./partials/header');%>
+      <style>
+         td, th{
+         border: 1px solid;
+         }
+      </style>
+   </head>
+   <body onload="essentials()">
+      <header id="header"> </header>
+      <div class="main">
+         <%- include('./partials/verifierNav'); %>
+         <ul>
+            <p id="declare">Ballots given below are audited successfully. </p>
+            <div id='audit_body' class="tab-content">
+            <table style="width:100%; text-align: center;">
+               <thead>
+                  <tr>
+                     <th>Election Number</th>
+                     <th>Ballot Number</th>
+                     <th>Current State</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <% trying.data.forEach(function(entry){%>
+                  <tr>
+                     <td><%= entry.Record.electionNumber %></td>
+                     <td><%= entry.Record.ballotNumber %></td>
+                     <td> 4 </td>
+                  </tr>
+                  <% auditing.doneAudit( "0000222",entry.Record.ballotNumber,entry.Record.electionNumber)  %>
+                  <%});%>
+               </tbody>
+            </table>
+         </ul>
+      </div>
+      <footer id="footer"></footer>
+      <script> 
+         var i= document.getElementById("audit");
+         
+         i.className +=" active";
+      </script>
+   </body>
+</html>

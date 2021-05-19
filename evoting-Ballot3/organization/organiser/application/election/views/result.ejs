@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <%- include('./partials/header');%>
+   </head>
+   <body onload="essentials(),messgeTimeout()">
+      <header id="header"> </header>
+      <div class="main">
+         <% elections.forEach(function(election){ %>
+         <% if(election.id == query.id){%>
+         <% if((election.value.voterlist).search(voter+',') > -1){%>
+         <p id="message"> You have already voted for this election </p>
+         <a href="/welcome" id="back_home">Click here to go back to home page.</a>
+         <%}else{%>
+         <div id='update'  class='tab-content'>
+            <h3 class="message1"> Issuing Ballot ...</h3>
+            <form  name ="issueBallot" method="post" action="/result/<%= election.key %>" >
+               <p class="message1" id="timeout" style="display:none">Your ballot has been issued, Your ballot Number is <%= (parseInt( election.value.ballot ) + 1 )%> </p>
+               <% issuing.issuing(voter,(parseInt(election.value.ballot) + 1),election.value.election_date,election.id)%>
+               <input type="hidden" name="name" value='<%= election.value.election_name %>' >
+               <input type="hidden" name="date" value='<%= election.value.election_date %>' >
+               <input type="hidden" name="user1" value='<%= election.value.candidate_1.user_name%>'>
+               <input type="hidden" name="branchname1" value='<%= election.value.candidate_1.branch%>'>
+               <input type="hidden"  name="partyname1"  value='<%= election.value.candidate_1.party%>' >
+               <input type="hidden" name="user2" value='<%= election.value.candidate_2.user_name%>'>
+               <input type="hidden" name="branchname2" value='<%= election.value.candidate_2.branch%>'>
+               <input type="hidden"  name="partyname2"  value='<%= election.value.candidate_2.party%>' >
+               <input type="hidden" name="user3" value='<%= election.value.candidate_3.user_name%>'>
+               <input type="hidden" name="branchname3" value='<%= election.value.candidate_3.branch%>'>
+               <input type="hidden"  name="partyname3"  value='<%= election.value.candidate_3.party%>' >
+               <input type="hidden"  id="voterlist" name="voterlist" value='<%=election.value.voterlist%>'>
+               <input type="hidden" value='<%= (parseInt(election.value.ballot) + 1 )%>' name="ballot">
+               <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+               <input type='hidden' value='<%= election.value.type%>' name='type'>
+               <p id="declare" style="display:none"><input type="submit" value="OK"></p>
+            </form>
+            <%}%>
+            <%  } });%>
+         </div>
+      </div>
+      <footer id="footer"></footer>
+      <script>
+         function messgeTimeout(){
+         setTimeout(function(){
+             document.getElementById("timeout").style.display ="block";
+             document.getElementById("declare").style.display ="block";
+         
+         },4000);
+         
+         
+         }
+         
+      </script>
+   </body>
+</html>

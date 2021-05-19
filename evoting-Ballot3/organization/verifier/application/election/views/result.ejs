@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+   <meta http-equiv="refresh" content="8">
+   <head>
+      <%- include('./partials/header');%>
+      <style>
+         td, th{
+         border: 1px solid;
+         }
+      </style>
+   </head>
+   <body onload="essentials()">
+      <header id="header"> </header>
+      <div class="main">
+        <%- include('./partials/verifierNav'); %>
+        <%# utils.results("123","384c5a2b2c7ddea8af51ed87d4000e8e","Sam","Ram","Shyam")%>
+        <div id="result_page">
+           <b class='announcement'>Election Details:</b>
+           <br/>
+           <br/>
+           <p><b>Election Name:</b> <%= utils.Name %></p>
+           <p><b>Election Number:</b> <%= utils.number %></p>
+           <p><b>Audited number of Votes:</b><%= utils.json1; %></p>
+           <p class='announcement'>Breakdown of Votes among candidates:</p>
+           <p><b><%= utils.cand1 %>:</b><%= utils.json2; %></p>
+           <p><b><%= utils.cand2 %>:</b><%= utils.json3; %></p>
+           <p><b><%= utils.cand3 %>:</b><%= utils.json4; %></p>
+           <p><b >Majority of votes casted to :<span class='announcement'  id="major"></span></b></p>
+        </div>
+      </div>
+      <footer id="footer" style="position:relative"></footer>
+      <script>
+         var e = Math.max("<%= utils.json2; %>","<%= utils.json3; %>","<%= utils.json4; %>");
+         if(e=='<%= utils.json2; %>'){
+             document.getElementById("major").innerHTML="<%= utils.cand1; %>";
+         }
+         if(e=='<%= utils.json3; %>'){
+             document.getElementById("major").innerHTML+="<br/>"+"<%= utils.cand2; %>";
+         }
+         if(e=='<%= utils.json4; %>'){
+             document.getElementById("major").innerHTML+="<br/>"+"<%= utils.cand3; %>";
+         }
+         function myFunction(){
+         
+                       "<% utils.results(query.elN,query.id,query.c1,query.c2,query.c3)%>" ;
+         }
+         var i= document.getElementById("results");
+         i.className +=" active";
+      </script>
+   </body>
+</html>

@@ -1,0 +1,213 @@
+<html>
+   <head>
+      <%- include('./partials/header');%>
+   </head>
+   <body onload="essentials(),MyFunction()">
+      <header id="header"> </header>
+      <div style="min-height: calc(100vh - 152px);">
+        <div>
+           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css">
+        </div>
+        <!-- Set up the question and options over in the JavaScript -->
+        <div id="content">
+           <h1 id="question"></h1>
+           <div class="table" id="table"></div>
+           <button id="vote" class=""><span class="text">Vote</span><i class='fas fa-circle-notch fa-spin'></i></button>
+        </div>
+        <% elections.forEach(function(election){ %>
+        <% if(election.id == query.id){%>
+        <% if((election.value.voterlist).search(voter +',') > -1){%>
+        <p id="message"> You have already voted for this election </p>
+        <a href="/welcome" id="back_home">Click here to go back to home page.</a>
+        <%}else{%>
+        <div id='cast' class='tab-content'>
+           <form id="castBallot" name ="castBallot" method="post" action="/cast/<%= election.key %>" >
+              <div id="hide" style="display: none;">
+                 <p> <%= election.value.candidate_1.user_name %>  </p>
+                 <p> <%= election.value.candidate_2.user_name %>  </p>
+                 <p> <%= election.value.candidate_3.user_name %>  </p>
+              </div>
+              <input type="hidden" name="name" value='<%= election.value.election_name %>' >
+              <input type="hidden" name="date" value='<%= election.value.election_date %>' >
+              <input type="hidden" name="user1" value='<%= election.value.candidate_1.user_name%>'>
+              <input type="hidden" name="branchname1" value='<%= election.value.candidate_1.branch%>'>
+              <input type="hidden"  name="partyname1"  value='<%= election.value.candidate_1.party%>' >
+              <input type="hidden" name="user2" value='<%= election.value.candidate_2.user_name%>'>
+              <input type="hidden" name="branchname2" value='<%= election.value.candidate_2.branch%>'>
+              <input type="hidden"  name="partyname2"  value='<%= election.value.candidate_2.party%>' >
+              <input type="hidden" name="user3" value='<%= election.value.candidate_3.user_name%>'>
+              <input type="hidden" name="branchname3" value='<%= election.value.candidate_3.branch%>'>
+              <input type="hidden"  value='<%= election.value.voterlist%><%= voter%>,' name="voterlist" >
+              <input type="hidden" value='<%=query.bt%>' name="btNum">
+              <input type='hidden' value='' id='selCand' name='selCand'>
+              <input type="hidden" value='<%= election.value.ballot%>' name="ballot">
+              <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+              <input type='hidden' value='<%= election.value.type%>' name='type'>
+           </form>
+           <%}%>
+           <%  } });%>
+        </div>
+      </div>
+      <footer id="footer"></footer>
+      <script>
+         //document.getElementById("hide").style.display = "none";
+         
+           
+           
+                   
+                   
+            var options = new Array();
+            var getTest = new Array();
+            getTest = document.getElementsByTagName('p');
+         
+             options.push(getTest[0].innerHTML);
+           options.push(getTest[1].innerHTML);
+           options.push(getTest[2].innerHTML);
+          // options.push('candidate 3');
+           
+          
+           
+               console.log(options);
+               
+               
+            function MyFunction(){
+                var question = "Choose the candidate of your choice";
+                document.getElementById("question").innerText = question;
+               var table = document.getElementById("table");
+         
+                updateOptions(options);
+             
+               function updateOptions(options){
+                 options.forEach(item => {
+                 // Create row
+                 var row = document.createElement("div");
+                 row.classList.add("tr");
+                 
+                 // Create cells
+                 var cell1 = document.createElement("div");
+                 cell1.classList.add("td");
+                 cell1.classList.add("check");
+                 cell1.innerHTML = "<i class='far fa-square'></i>";
+                 
+                 var cell2 = document.createElement("div");
+                 cell2.classList.add("td");
+                 cell2.innerText = item;
+                 
+                 // Append cells to row
+                 row.appendChild(cell1);
+                 row.appendChild(cell2);
+                 
+                 // Append row to table
+                 table.appendChild(row);
+               })
+               }
+            
+               var rows = document.getElementsByClassName("tr");
+               for(i = 0; i < rows.length; i++){
+                 rows[i].addEventListener("click", function(e){
+                   var active = document.querySelector(".tr.active");
+                   if(active){
+                     active.classList.remove("active");
+                   }
+                   
+                   this.classList.add("active");
+                   
+                   document.getElementById("vote").classList.add("shown");
+                 })
+               }
+               
+               document.getElementById("vote").addEventListener("click", function(e){
+                 this.classList.add("loading");
+                 
+                 var choice = document.querySelector(".tr.active .td:nth-child(2)").innerText;
+                 document.getElementById('selCand').value=choice;
+                  document.getElementById("castBallot").submit();
+                 // setTimeout(() => {
+                //   document.getElementById("content").innerHTML = `<h1>You chose ${choice}.</h1><h2>Thank you for voting!</h2>`;
+                // }, 1000);
+               })
+            }
+               
+      </script>
+      <style>
+         .table{
+         display: table;
+         margin: 0 auto;
+         }
+         .tr{
+         display: table-row;
+         cursor: pointer;
+         transition: all 300ms;
+         }
+         .td{
+         display: table-cell;
+         font-size: 17px;
+         padding: 7px 0;
+         text-align: left;
+         }
+         .td.check{
+         padding-right: 20px;
+         }
+         .tr:hover{
+         transform: scale(1.05);
+         }
+         button{
+         background-color: midnightblue;
+         color: white;
+         border: 1px solid midnightblue;
+         border-radius: 30px;
+         font-size: 17px;
+         padding: 10px 30px;
+         margin-top: 35px;
+         margin-left:38%;
+         cursor: pointer;
+         transition: all 300ms, transform 100ms;
+         opacity: 0;
+         }
+         button > * {
+         color: white;
+         transition: all 300ms;
+         }
+         button:not(.loading):hover > *{
+         color: midnightblue;
+         }
+         button i{
+         display: none !important;
+         }
+         button.loading{
+         background-color: transparent;
+         }
+         button.loading i{
+         display: inline-block !important;
+         color: grey;
+         }
+         button.loading .text{
+         display: none;
+         }
+         button:not(.loading):hover{
+         background-color: transparent;
+         color: white;
+         }
+         button:active{
+         outline: 0;
+         transform: translateY(3px);
+         }
+         button:focus{
+         outline: 0; 
+         }
+         button.shown{
+         opacity: 1;
+         }
+         .tr.active{
+         font-weight: bold;
+         transform: scale(1.1);
+         }
+         .tr.active i::before{
+         content: "\f14a";
+         }
+         .tr.active i{
+         font-weight: 70;
+         }
+      </style>
+   </body>
+</html>

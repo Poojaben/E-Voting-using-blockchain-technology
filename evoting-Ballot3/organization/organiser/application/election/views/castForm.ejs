@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+        <%- include('./partials/header');%>
+    </head>
+    <body onload="essentials()">
+  <header id="header"> </header>
+  <%- include('./partials/sideNav'); %><br/>
+<%- include('./partials/nav'); %>
+
+    <% elections.forEach(function(election){ %>
+   <% if(election.id == query.id){%>
+    <% if((election.value.voterlist).search('1323032,') > -1){%>
+        Already voted
+  
+    <%}else{%>
+
+   
+    <div id='cast' class='tab-content'>
+       
+            <h3> casting Ballot </h3>
+            
+            <form name ="castBallot" method="post" action="/castForm/<%= election.key %>" >
+                <p> Submit to save your selection </p>
+                
+
+                <input type="hidden" name="name" value='<%= election.value.election_name %>' >
+            <input type="hidden" name="date" value='<%= election.value.election_date %>' >
+            <input type="hidden" name="user1" value='<%= election.value.candidate_1.user_name%>'>
+            <input type="hidden" name="branchname1" value='<%= election.value.candidate_1.branch%>'>
+            <input type="hidden"  name="partyname1"  value='<%= election.value.candidate_1.party%>' >
+            
+            <input type="hidden" name="user2" value='<%= election.value.candidate_2.user_name%>'>
+            <input type="hidden" name="branchname2" value='<%= election.value.candidate_2.branch%>'>
+            <input type="hidden"  name="partyname2"  value='<%= election.value.candidate_2.party%>' >
+            <input type="hidden" name="user3" value='<%= election.value.candidate_3.user_name%>'>
+            <input type="hidden" name="branchname3" value='<%= election.value.candidate_3.branch%>'>
+            <input type="hidden"  value='<%= election.value.voterlist%>1323032,' name="voterlist" >
+   
+                <input type="hidden" value='<%=query.bt%>' name="btNum">
+            <input type='hidden' value='<%= election.value.candidate_2.user_name%>' name='selCand'>
+        <input type="hidden" value='<%= election.value.ballot%>' name="ballot">
+        <input type='hidden' value='<%= election.value.rev%>' name='rev'>
+        <input type='hidden' value='<%= election.value.type%>' name='type'>
+        <p><input type="submit" value="OK"></p>
+        </form>
+       
+    
+   
+    <%}%>
+    
+    <%  } });%>
+</div>
+
+<script>
+  var i= document.getElementById("results");
+        
+        i.className +=" active";
+
+ var j=document.getElementById("election_tab");
+      
+      j.className +=" active";
+
+   </script>
+    </body>
+    </html>

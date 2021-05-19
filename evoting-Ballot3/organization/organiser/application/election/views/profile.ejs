@@ -1,0 +1,218 @@
+<!DOCTYPE html>  
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <script
+         src="https://code.jquery.com/jquery-3.5.1.min.js"
+         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+         crossorigin="anonymous"></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+      <script type="text/javascript" src="/public/js/validator/profile.js"></script>
+      <style>  
+         body{  
+         font-family: Calibri, Helvetica, sans-serif;  
+         background-color: white;  
+         margin: 0;
+         }  
+         .container {  
+         /*padding: 50px;  */
+         /*background-color: lightblue;  */
+         }
+         .width-50{
+         width:50%;
+         }
+         .float-left{
+         float: left;
+         }
+         input[type=text], input[type=email], input[type=number],input[type=password],select, textarea {  
+         width: calc(100% - 30px)!important;
+         padding: 10px;
+         margin: 5px 0;
+         display: inline-block;
+         background: #f1f1f1;
+         border: 1px solid #dfdfdf;
+         border-radius: 10px;
+         }  
+         input[type=text]:focus, input[type=password]:focus {  
+         background-color: orange;  
+         outline: none;  
+         }  
+         div {  
+         padding: 10px 0;  
+         }  
+         hr {  
+         border: 1px solid #f1f1f1;  
+         margin-bottom: 25px;  
+         }  
+         .registerbtn {  
+         background-color: midnightblue;
+         color: white;
+         padding: 10px 20px;
+         border: none;
+         cursor: pointer;
+         width: 100%;
+         border-radius: 10px;
+         font-size: 18px;
+         width: 200px;
+         }  
+         /*.registerbtn:hover {  
+         opacity: 1;  
+         }*/
+         input[type=submit]:hover {
+         padding: 10px 20px!important;
+         border-radius: 10px!important;
+         }
+         .validation-error-label {
+            display: block;
+            color: red;
+         }
+         .dropbtn {
+         background-color: transparent;
+         color: white;
+         padding: 10px;
+         cursor: pointer;
+         border: 1px solid;
+         }
+         .dropbtn:hover, .dropbtn:focus {
+         background-color: #2980B9;
+         }
+         .dropdown-content {
+         display: none;
+         position: absolute;
+         background-color: #f1f1f1;
+         min-width: 160px;
+         overflow: auto;
+         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+         z-index: 1;
+         right: 20px
+         }
+         .dropdown-content a {
+         color: black;
+         padding: 12px 16px;
+         text-decoration: none;
+         display: block;
+         }
+         .dropdown a:hover {background-color: #ddd;}
+         .show {display: block;}
+      </style>
+      <%- include('./partials/userHeader');%>
+   </head>
+   <body onload="SpecificEssentials()">
+      <header id="header" style="display: flex; justify-content: space-between; align-items: center;">
+         <span id="title">e-Voting</span> 
+         <div style="padding: 0">
+            <button onclick="myFunction()" class="dropbtn">My Account</button>
+            <div id="myDropdown" class="dropdown-content">
+               <a href="/profile">My Profile</a>
+               <a href="/logout">Logout</a>
+            </div>
+         </div>
+      </header>
+      <div class="main">
+         <% if(locals.err_msg) { %>
+         <script>
+            var msg = "<%= err_msg %>";
+            alert(msg);
+         </script>
+         <% } %>
+         <form style="display: block;" name="profile_form" id="registration_form" method="post" action="/profile/<%= data._id %>">
+            <div class="container">
+               <center>
+                  <h2>My Profile</h2>
+               </center>
+               <hr>
+               <div>
+                  <div style="width:25%; float:left;">
+                     <label>Matriculation Number: </label>  
+                     <p><%= data.matriculationnumber %></p>
+                  </div>
+                  <div style="width:25%; float:left;">
+                     <label>Course:</label>   
+                     <select name="course" value="<%= data.course %>">
+                        <option value="HIS" <%=data.course==='HIS' ? 'selected' : '' %>>HIS</option>
+                        <option value="IT" <%=data.course==='IT' ? 'selected' : '' %>>IT</option>
+                        <option value="EBIS" <%=data.course==='EBIS' ? 'selected' : '' %>>EBIS</option>
+                        <option value="IBIS" <%=data.course==='IBIS' ? 'selected' : '' %>>IBIS</option>
+                     </select>
+                  </div>
+                  <div style="width:25%; float:left;">
+                     <label>Branch:</label>
+                     <select name="branch" value="<%= data.branch %>">
+                        <option value="">Select Branch</option>
+                        <option value="fb-1" <%=data.branch==='fb-1' ? 'selected' : '' %>>fb-1</option>
+                        <option value="fb-2" <%=data.branch==='fb-2' ? 'selected' : '' %>>fb-2</option>
+                        <option value="fb-3" <%=data.branch==='fb-3' ? 'selected' : '' %>>fb-3</option>
+                     </select>
+                  </div>
+                  <div style="width:25%;display: inline-block;">
+                     <label>Semester:</label>
+                     <input type="number" name="semester" placeholder="semester number" value="<%= data.semester %>" size="2" /> 
+                  </div>
+               </div>
+               <!-- <fieldset>Personal Detail</fieldset> -->
+               <div>
+                  <div class="width-50 float-left">
+                     <label> First Name: </label>   
+                     <input type="text" name="firstname" placeholder= "Add Firstname" size="15" value="<%= data.firstname %>" required/>   
+                  </div>
+                  <div class="float-left" style="width:calc(50% - 10px); margin-left: 10px">
+                     <label> Last Name: </label>   
+                     <input type="text" name="lastname" placeholder="Add Lastname" size="15" value="<%= data.lastname %>"  required/>        
+                  </div>
+               </div>
+               <div class="width-50">
+                  <label for="email">Email:</label>  
+                  <input type="email" placeholder="Enter Email" name="email" value="<%= data.email %>" required>  
+               </div>
+               <div>
+                  <div class="width-50 float-left">
+                     <label for="password">Password:</label>  
+                     <input type="password" id="password" name="password" placeholder="Enter Password" required> 
+                  </div>
+                  <div class="float-left" style="width:calc(50% - 10px); margin-left: 10px">
+                     <label for="password_repeat">Re-type Password:</label>  
+                     <input type="password" placeholder="Retype Password" name="password_repeat" required>
+                  </div>
+               </div>
+               <input type="hidden" name="rev" value="<%= data._rev %>">
+               <input type="hidden" name="oldMatriculationNumber" value="<%= data.matriculationnumber %>">
+               <input type="hidden" name="oldPassword" value="<%= data.password %>">
+               <div style="text-align: center;">
+                  <input type="submit" name="submit" class="registerbtn" value="Update" />    
+               </div>
+            </div>
+         </form>
+      </div>
+      <footer id="footer"></footer>
+      <script>
+         function SpecificEssentials() {
+           // document.getElementById("header").innerHTML = "<span id=" + " title" + ">e-Voting123</span>";
+         
+           document.getElementById("footer").innerHTML =
+               " <p><b>  " + "Our lives begin to end the day we become silent about things that matter." + "</b > <br />"
+           + "&#8212;  Dr.Martin Luther King, Jr., civil rights leader and Nobel Peace Prize laureate </p>";
+         }
+         
+         /* When the user clicks on the button, 
+         toggle between hiding and showing the dropdown content */
+         function myFunction() {
+         document.getElementById("myDropdown").classList.toggle("show");
+         }
+         
+         // Close the dropdown if the user clicks outside of it
+         window.onclick = function(event) {
+         if (!event.target.matches('.dropbtn')) {
+           var dropdowns = document.getElementsByClassName("dropdown-content");
+           var i;
+           for (i = 0; i < dropdowns.length; i++) {
+             var openDropdown = dropdowns[i];
+             if (openDropdown.classList.contains('show')) {
+               openDropdown.classList.remove('show');
+             }
+           }
+         }
+         }
+      </script>
+   </body>
+</html>

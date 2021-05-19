@@ -1,0 +1,43 @@
+
+<body onload="checkDate()">
+<div id="issue_welcome">
+  <p>Please  select  to vote in an election that are held today:</p>
+
+
+
+
+</div>
+
+<script>
+
+
+        function checkDate(){ 
+            
+            var d= new Date();
+            var date= new Date(d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate());
+
+            var mydiv= document.getElementById('issue_welcome');
+
+          "  <% elections.forEach(function(election){ %>"
+           if("<%=election.value.type%>"=='election'){
+            var electionDate = new Date("<%= election.value.election_date %>");
+            //alert((d.getFullYear() === electionDate.getFullYear) && (d.getMonth() === electionDate.getMonth()) && (d.getDate() === electionDate.getDate()));
+            if((d.getFullYear() === electionDate.getFullYear()) && (d.getMonth() === electionDate.getMonth()) && (d.getDate() === electionDate.getDate())){
+                var anchorTag = document.createElement('a');
+                anchorTag.setAttribute('href',"/result?id=<%= election.id %>");
+                 anchorTag.setAttribute('id',"<%= election.id %>");
+                 anchorTag.setAttribute('name',"<%= election.value.election_name%>");
+                 anchorTag.innerText = "<%= election.value.election_name %>"+"\n\n";
+                 mydiv.appendChild(anchorTag);
+               }    
+               else{
+
+
+               }  
+            }
+       "<% });%>"
+        
+    }
+
+    </script> 
+    </body>
